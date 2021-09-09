@@ -118,7 +118,12 @@ function csv(fileName) {
     })
 
 
-    reader.on("close", () => {       
+    reader.on("close", () => {      
+        console.log("Males before removing duplicates:")
+        console.log(males)
+        console.log("Females before removing duplicates:")
+        console.log(females)
+        console.log("\n") 
   
         // Remove duplicates
         males = removeDuplicates(males)
