@@ -74,11 +74,122 @@ function isAlphabetic(name) {
     return alphabetic
 }
 
-function csv(){
+function removeDuplicates(oldArray){
+    var newArray = []
+
+    var currentElement;
+    var elementFound;
+    for(i = 0;i<oldArray.length;++i){
+        currentElement = oldArray[i]
+        elementFound = false
+
+        for(j=0;j<newArray.length;++j){
+            if(newArray[j] == currentElement){
+                elementFound = true
+            }
+        }
+
+        if(elementFound == false){
+            newArray.push(currentElement)
+        }
+    }
+
+    return newArray
+}
+
+function csv(fileName) {
+    const fs = require("fs")
+    const rl = require("readline")
+
+    const reader = rl.createInterface(
+        {input: fs.createReadStream(fileName)
+    })
+
+    var males = []
+    var females = []
+
+    reader.on("line", (row) => {
+        var split = row.split(", ")
+        if(split[1] == "m"){
+            males.push(split[0])
+        }else if(split[1] == "f"){
+            females.push(split[0])
+        }
+    })
+
+
+    reader.on("close", () => {       
+  
+        // Remove duplicates
+        males = removeDuplicates(males)
+        females = removeDuplicates(females)
+        console.log("Males:")
+        console.log(males)
+        console.log("Females:")
+        console.log(females)
+        console.log("\n") 
+
+        // Calculate Scores
+        var matches
+        var maleName
+        var femaleName
+        var matchScore
+        var outputString
+        for(m=0;m<males.length;++m){
+            matches = []
+            maleName = males[m]
+            console.log("Male: " + maleName) 
+            for(f=0;f<females.length;++f){
+                femaleName = females[f]
+
+                if (!isAlphabetic(maleName) || !isAlphabetic(femaleName)) {
+                    console.log("Error: All characters need to be alphabetic.")
+                } else {
+                    matchScore = CalculateScore(maleName, femaleName)
+                    matches.push({partner:femaleName, score:matchScore})     
+                }           
+            }
+
+            matches.sort(function(a, b){
+                let score1 = a.score
+                let score2 = b.score
+
+                if(score1 != score2){
+                    return score2 - score1
+                }else{
+                    let person1 = a.partner.toLowerCase()
+                    let person2 = b.partner.toLowerCase()
+    
+                    if (person1 < person2) {return -1}
+                    if (person1 > person2) {return 1}
+                    return 0;
+                }
+            })
+
+            // Sort by score, then by name
+            for(i=0;i<matches.length;++i){
+                femaleName = matches[i].partner
+                matchScore = matches[i].score
+
+                outputString = maleName + " matches " + femaleName + " " + matchScore.toString() + "%"
+
+                if (matchScore >= 80) {
+                    outputString += ", good match"
+                }
+            
+                console.log(outputString) 
+            }
+            console.log("\n") 
+        }
+
+    })
 
 }
 
 function main() {
+
+    // Test Case
+    console.log("Test Case:\n") 
 
     var name1 = "Jack"
     var name2 = "Jill"
@@ -88,6 +199,10 @@ function main() {
     } else {
         TestNames(name1, name2)
     }
+    console.log("\n------------------------\n") 
+
+    // Entire CSV file
+    csv("names.csv")
 }
 
 main()
