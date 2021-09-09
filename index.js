@@ -74,22 +74,22 @@ function isAlphabetic(name) {
     return alphabetic
 }
 
-function removeDuplicates(oldArray){
+function removeDuplicates(oldArray) {
     var newArray = []
 
     var currentElement;
     var elementFound;
-    for(i = 0;i<oldArray.length;++i){
+    for (i = 0; i < oldArray.length; ++i) {
         currentElement = oldArray[i]
         elementFound = false
 
-        for(j=0;j<newArray.length;++j){
-            if(newArray[j] == currentElement){
+        for (j = 0; j < newArray.length; ++j) {
+            if (newArray[j] == currentElement) {
                 elementFound = true
             }
         }
 
-        if(elementFound == false){
+        if (elementFound == false) {
             newArray.push(currentElement)
         }
     }
@@ -102,29 +102,30 @@ function csv(fileName) {
     const rl = require("readline")
 
     const reader = rl.createInterface(
-        {input: fs.createReadStream(fileName)
-    })
+        {
+            input: fs.createReadStream(fileName)
+        })
 
     var males = []
     var females = []
 
     reader.on("line", (row) => {
         var split = row.split(", ")
-        if(split[1] == "m"){
+        if (split[1] == "m") {
             males.push(split[0])
-        }else if(split[1] == "f"){
+        } else if (split[1] == "f") {
             females.push(split[0])
         }
     })
 
 
-    reader.on("close", () => {      
+    reader.on("close", () => {
         console.log("Males before removing duplicates:")
         console.log(males)
         console.log("Females before removing duplicates:")
         console.log(females)
-        console.log("\n") 
-  
+        console.log("\n")
+
         // Remove duplicates
         males = removeDuplicates(males)
         females = removeDuplicates(females)
@@ -132,7 +133,7 @@ function csv(fileName) {
         console.log(males)
         console.log("Females:")
         console.log(females)
-        console.log("\n") 
+        console.log("\n")
 
         // Calculate Scores
         var matches
@@ -140,39 +141,39 @@ function csv(fileName) {
         var femaleName
         var matchScore
         var outputString
-        for(m=0;m<males.length;++m){
+        for (m = 0; m < males.length; ++m) {
             matches = []
             maleName = males[m]
-            console.log("Male: " + maleName) 
-            for(f=0;f<females.length;++f){
+            console.log("Male: " + maleName)
+            for (f = 0; f < females.length; ++f) {
                 femaleName = females[f]
 
                 if (!isAlphabetic(maleName) || !isAlphabetic(femaleName)) {
                     console.log("Error: All characters need to be alphabetic.")
                 } else {
                     matchScore = CalculateScore(maleName, femaleName)
-                    matches.push({partner:femaleName, score:matchScore})     
-                }           
+                    matches.push({ partner: femaleName, score: matchScore })
+                }
             }
 
-            matches.sort(function(a, b){
+            matches.sort(function (a, b) {
                 let score1 = a.score
                 let score2 = b.score
 
-                if(score1 != score2){
+                if (score1 != score2) {
                     return score2 - score1
-                }else{
+                } else {
                     let person1 = a.partner.toLowerCase()
                     let person2 = b.partner.toLowerCase()
-    
-                    if (person1 < person2) {return -1}
-                    if (person1 > person2) {return 1}
+
+                    if (person1 < person2) { return -1 }
+                    if (person1 > person2) { return 1 }
                     return 0;
                 }
             })
 
             // Sort by score, then by name
-            for(i=0;i<matches.length;++i){
+            for (i = 0; i < matches.length; ++i) {
                 femaleName = matches[i].partner
                 matchScore = matches[i].score
 
@@ -181,20 +182,47 @@ function csv(fileName) {
                 if (matchScore >= 80) {
                     outputString += ", good match"
                 }
-            
-                console.log(outputString) 
+
+                console.log(outputString)
             }
-            console.log("\n") 
+            console.log("\n")
         }
 
     })
 
 }
 
+
 function main() {
 
+    const http = require('http')
+    const fs = require('fs')
+    
+    const server = http.createServer((req, res) => {
+      res.writeHead(200, { 'content-type': 'text/html' })
+      fs.createReadStream('index.html').pipe(res)
+    })
+    
+    server.listen(process.env.PORT || 3000)
+    
+    var button = document.getElementById("calculateScoreButton");
+    button.addEventListener("click", function() {
+        var name1 = document.getElementById("name1").value
+        var name2 = document.getElementById("name2").value
+    
+        if(name1 == "" || name2 == ""){
+            document.getElementById("result").innerHTML = ""
+            console.log("FBwkj")
+    
+        }
+        console.log("FBwkj")
+
+        document.getElementById("result").innerHTML = "FUCK YEAH"    
+    }, )
+        
+    
     // Test Case
-    console.log("Test Case:\n") 
+    console.log("Test Case:\n")
 
     var name1 = "Jack"
     var name2 = "Jill"
@@ -204,7 +232,7 @@ function main() {
     } else {
         TestNames(name1, name2)
     }
-    console.log("\n------------------------\n") 
+    console.log("\n------------------------\n")
 
     // Entire CSV file
     csv("names.csv")
