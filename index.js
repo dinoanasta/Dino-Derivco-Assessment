@@ -192,35 +192,26 @@ function csv(fileName) {
 
 }
 
-
 function main() {
+    var http = require('http')
+    var fs = require('fs')
+    
+    function onRequest(request, response) {
+        response.writeHead(200, {'Content-Type': 'text/html'})
+        fs.readFile('index.html', null, function(error, data) {
+            if (error) {
+                response.writeHead(404)
+                response.write('File not found!')
+            } else {
+                response.write(data)
+            }
+            response.end()
+        })
+    }
+    
+    http.createServer(onRequest).listen(8000);
 
-    const http = require('http')
-    const fs = require('fs')
-    
-    const server = http.createServer((req, res) => {
-      res.writeHead(200, { 'content-type': 'text/html' })
-      fs.createReadStream('index.html').pipe(res)
-    })
-    
-    server.listen(process.env.PORT || 3000)
-    
-    var button = document.getElementById("calculateScoreButton");
-    button.addEventListener("click", function() {
-        var name1 = document.getElementById("name1").value
-        var name2 = document.getElementById("name2").value
-    
-        if(name1 == "" || name2 == ""){
-            document.getElementById("result").innerHTML = ""
-            console.log("FBwkj")
-    
-        }
-        console.log("FBwkj")
 
-        document.getElementById("result").innerHTML = "FUCK YEAH"    
-    }, )
-        
-    
     // Test Case
     console.log("Test Case:\n")
 
@@ -239,3 +230,10 @@ function main() {
 }
 
 main()
+
+module.exports = {
+    TestNames: function(firstName, secondName){
+        return TestNames(firstName, secondName)
+    }
+}
+// module.TestNames.export = "TestNames"

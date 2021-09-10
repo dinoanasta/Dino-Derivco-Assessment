@@ -1,14 +1,14 @@
-<!doctype  HTML>
-<html>
+<!doctype HTML>
+<html lang="en">
 
 <head>
-    <link rel="stylesheet" href="./style.css">
+    <!-- <link rel="stylesheet" href="./style.css"> -->
     <!-- <script src="index.js"></script> -->
-
+    <meta charset="UTF-8">
     <title>Good Match</title>
 </head>
 
-<body>
+<body style="background-image: url('tennis.jpg')">
 
     <h1>Good Match Tennis </h1>
     <p>Please enter the player's names</p>
@@ -18,9 +18,24 @@
     <label>Player 2:</label>
     <input type="text" id="name2">
     <br>
-    <button id="calculateScoreButton">Calculate Score</button>
+    <button id="calculateScoreButton" onclick="buttonClicked()">Calculate Score</button>
     <br>
     <h3 id="result"></h3>
+
+    <script>
+        function buttonClicked() {
+            var name1 = document.getElementById("name1").value
+            var name2 = document.getElementById("name2").value
+
+            if (name1 == "" || name2 == "") {
+                document.getElementById("result").innerHTML = "Please enter both names"
+            }else{
+                var indexjs = require('./index.js');
+                var text = indexjs.TestNames(name1, name2)
+                document.getElementById("result").innerHTML = text
+            }
+        }
+    </script>
 
 </body>
 
