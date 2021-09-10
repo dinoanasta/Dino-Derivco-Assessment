@@ -60,6 +60,8 @@ function TestNames(firstName, secondName) {
     }
 
     console.log(outputString)
+
+    return outputString
 }
 
 function isAlphabetic(name) {
@@ -236,4 +238,3 @@ module.exports = {
         return TestNames(firstName, secondName)
     }
 }
-// module.TestNames.export = "TestNames"

@@ -30,8 +30,8 @@
             if (name1 == "" || name2 == "") {
                 document.getElementById("result").innerHTML = "Please enter both names"
             }else{
-                var indexjs = require('./index.js');
-                var text = indexjs.TestNames(name1, name2)
+                var mainfile = require('./index.js');
+                var text = mainfile.TestNames(name1, name2)
                 document.getElementById("result").innerHTML = text
             }
         }
